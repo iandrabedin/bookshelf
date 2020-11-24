@@ -1,9 +1,55 @@
-// 🐨 you'll need to import React and ReactDOM up here
+import React, {Fragment, useState} from 'react'
+import ReactDOM from 'react-dom'
+import VisuallyHidden from '@reach/visually-hidden'
+import {Dialog} from '@reach/dialog'
+import {Logo} from './components/logo'
+import {LoginForm} from './components/loginForm'
+import '@reach/dialog/styles.css'
 
-// 🐨 you'll also need to import the Logo component from './components/logo'
+const App = () => {
+  const [showDialog, setShowDialog] = useState('none')
 
-// 🐨 create an App component here and render the logo, the title ("Bookshelf"), a login button, and a register button.
-// 🐨 for fun, you can add event handlers for both buttons to alert that the button was clicked
+  function handleLogin(formData) {
+    console.log('login', formData)
+  }
 
-// 🐨 use ReactDOM to render the <App /> to the root element
-// 💰 find the root element with: document.getElementById('root')
+  function handleRegister(formData) {
+    console.log('register', formData)
+  }
+
+  return (
+    <Fragment>
+      <Logo />
+      <h1>Bookshelf</h1>
+      <button onClick={() => setShowDialog('login')}>Login</button>
+      <button onClick={() => setShowDialog('register')}>Register</button>
+
+      <Dialog
+        aria-label="Login form"
+        isOpen={showDialog === 'register'}
+        onDismiss={() => setShowDialog('none')}
+      >
+        <button className="close-button" onClick={() => setShowDialog('none')}>
+          <VisuallyHidden>Close</VisuallyHidden>
+          <span aria-hidden>×</span>
+        </button>
+        <p>Register</p>
+        <LoginForm onSubmit={handleLogin} buttonText="Login" />
+      </Dialog>
+      <Dialog
+        aria-label="Registration form"
+        isOpen={showDialog === 'login'}
+        onDismiss={() => setShowDialog('none')}
+      >
+        <button className="close-button" onClick={() => setShowDialog('none')}>
+          <VisuallyHidden>Close</VisuallyHidden>
+          <span aria-hidden>×</span>
+        </button>
+        <p>Login</p>
+        <LoginForm onSubmit={handleRegister} buttonText="Login" />
+      </Dialog>
+    </Fragment>
+  )
+}
+
+ReactDOM.render(<App />, document.getElementById('root'))
